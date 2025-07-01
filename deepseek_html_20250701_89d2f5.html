@@ -1,0 +1,2704 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Society - Fashion & Lifestyle</title>
+    <style>
+        :root {
+            --primary: #6a5acd;
+            --secondary: #ff6b6b;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --success: #20c997;
+            --whatsapp: #25D366;
+            --cart: #ff7043;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: white;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        /* Cart Button */
+        .cart-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+        
+        .cart-float a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background-color: var(--cart);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+        }
+        
+        .cart-float a:hover {
+            transform: scale(1.1);
+            background-color: #f4511e;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* Cart Modal */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 350px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .cart-modal.active {
+            transform: translateX(0);
+            display: block;
+        }
+        
+        .cart-header {
+            padding: 1rem;
+            background-color: var(--dark);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .cart-items {
+            padding: 1rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .cart-item-price {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cart-item-variant {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cart-item-remove {
+            color: var(--secondary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .cart-total {
+            padding: 1rem;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+        
+        .cart-checkout {
+            padding: 1rem;
+        }
+        
+        .btn-checkout {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-checkout:hover {
+            background-color: #5a4ab5;
+        }
+        
+        /* Product Options Modal */
+        .options-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .options-modal.active {
+            display: flex;
+        }
+        
+        .options-content {
+            background-color: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .options-header {
+            padding: 1rem;
+            background-color: var(--dark);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .options-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .options-body {
+            padding: 1rem;
+        }
+        
+        .option-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-group h4 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .option-btn {
+            padding: 8px 12px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-btn.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .options-footer {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .quantity-input {
+            width: 50px;
+            height: 30px;
+            text-align: center;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .btn-add-to-cart-final {
+            padding: 10px 20px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-add-to-cart-final:hover {
+            background-color: #ff5252;
+        }
+        
+        .hero {
+            padding: 4rem 0;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://i.postimg.cc/hPkt5gX0/GJ.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn-whatsapp {
+            background-color: var(--whatsapp);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+        }
+        
+        .btn:hover {
+            background-color: #ff5252;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* Features */
+        .features {
+            padding: 4rem 0;
+            background-color: #f9f9f9;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-item {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-item h3 {
+            margin: 1rem 0;
+            color: var(--primary);
+        }
+        
+        /* Products */
+        .products {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--dark);
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        .product-categories {
+            margin-bottom: 3rem;
+        }
+        
+        .category {
+            margin-bottom: 3rem;
+        }
+        
+        .category h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .category p {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        /* Horizontal Scroll Gallery */
+        .product-scroll-container {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+        
+        .product-scroll-wrapper {
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 20px;
+        }
+        
+        .product-scroll-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .product-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .product-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .product-scroll-gallery {
+            display: flex;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        
+        .product-scroll-item {
+            flex: 0 0 220px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .product-scroll-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .product-scroll-img {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .product-scroll-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-scroll-item:hover .product-scroll-img img {
+            transform: scale(1.1);
+        }
+        
+        .product-scroll-info {
+            padding: 1rem;
+        }
+        
+        .product-scroll-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .product-scroll-info .description {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            height: 40px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .product-scroll-info .price {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-scroll-info .btn-add-to-cart {
+            width: 100%;
+            padding: 8px;
+            font-size: 0.8rem;
+            border-radius: 5px;
+            justify-content: center;
+            background-color: var(--cart);
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .product-scroll-info .btn-add-to-cart:hover {
+            background-color: #f4511e;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 4rem 0;
+            background-color: #f9f9f9;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .testimonial-item {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .stars {
+            color: #ffc107;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .testimonial-text {
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        /* Contact */
+        .contact {
+            padding: 4rem 0;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .footer-about p {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links h3,
+        .footer-contact h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .contact-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .product-scroll-item {
+                flex: 0 0 180px;
+            }
+            
+            .product-scroll-img {
+                height: 150px;
+            }
+            
+            .cart-modal {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Floating Cart Button -->
+    <div class="cart-float">
+        <a href="#" id="cart-button">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+        </a>
+    </div>
+    
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cart-modal">
+        <div class="cart-header">
+            <h3>Keranjang Belanja</h3>
+            <button class="cart-close" id="cart-close">&times;</button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Cart items will be added here dynamically -->
+        </div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cart-total">Rp 0</span>
+        </div>
+        <div class="cart-checkout">
+            <button class="btn-checkout" id="checkout-button">Checkout via WhatsApp</button>
+        </div>
+    </div>
+    
+    <!-- Product Options Modal -->
+    <div class="options-modal" id="options-modal">
+        <div class="options-content">
+            <div class="options-header">
+                <h3 id="options-product-name">Pilih Varian</h3>
+                <button class="options-close" id="options-close">&times;</button>
+            </div>
+            <div class="options-body">
+                <div class="option-group" id="color-options">
+                    <h4>Warna</h4>
+                    <div class="option-buttons" id="color-buttons">
+                        <!-- Color options will be added here dynamically -->
+                    </div>
+                </div>
+                <div class="option-group" id="size-options">
+                    <h4>Ukuran</h4>
+                    <div class="option-buttons" id="size-buttons">
+                        <!-- Size options will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+            <div class="options-footer">
+                <div class="quantity-selector">
+                    <button class="quantity-btn" id="quantity-minus">-</button>
+                    <input type="number" class="quantity-input" id="quantity-input" value="1" min="1">
+                    <button class="quantity-btn" id="quantity-plus">+</button>
+                </div>
+                <button class="btn-add-to-cart-final" id="add-to-cart-final">Tambah ke Keranjang</button>
+            </div>
+        </div>
+    </div>
+    
+    <header>
+        <div class="container">
+            <h1>SOCIETY</h1>
+            <p>Fashion & Lifestyle Store</p>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+             <h1>Tingkatkan Penampilan Anda </h1>
+          <p>Temukan koleksi eksklusif kami yang dirancang untuk memenuhi kebutuhan gaya hidup anda dari aroma menawan parfum kami yang memikat hingga rangkaian skincare yang memberikan perawatan optimal untuk kulit anda dan fashion terkini untuk penampilan stylish.</p>
+            <a href="#products" class="btn">Jelajahi Produk Kami</a>
+            
+        </div>
+    </section>
+    
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Kenapa Harus Belanja di Society?</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-check-circle" style="font-size: 2.5rem; color: var(--success);"></i>
+                    <h3>Kualitas Terjamin</h3>
+                    <p>Setiap produk kami memiliki kualitas terbaik dengan bahan premium ideal untuk pria maupun wanita.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-money-bill-wave" style="font-size: 2.5rem; color: var(--success);"></i>
+                    <h3>Pembayaran COD</h3>
+                    <p>Kami menyediakan metode pembayaran COD (Bayar di Tempat) yang aman.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exchange-alt" style="font-size: 2.5rem; color: var(--success);"></i>
+                    <h3>Garansi Produk</h3>
+                    <p>Jika produk tidak sesuai/rusak anda bisa ajukan return dan kami akan menggantikannya.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-heart" style="font-size: 2.5rem; color: var(--success);"></i>
+                    <h3>Kepuasan Pelanggan</h3>
+                    <p>Kepuasan pelanggan adalah prioritas utama kami dalam setiap transaksi.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="products" id="products">
+        <div class="container">
+            <div class="section-title">
+                <h2>Koleksi Eksklusif Kami</h2>
+            </div>
+            
+            <div class="product-categories">
+                <!-- Parfum -->
+                <div class="category">
+                    <h3>Parfum</h3>
+                    </p>
+                    
+                    <div class="product-scroll-container">
+                        <div class="product-scroll-wrapper">
+                            <div class="product-scroll-gallery">
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/J46RhGfq/A-clear-glass-bottle-of-yellow-perfume-with-a-black-cap-and-a-white-label-that-says-FOR-Oliver-an.png" alt="Parfum 1">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Parfum For Oliver</h4>
+                                        <div class="description">Size 30ml
+                    bonus tester 10ml</div>
+                                        <div class="price">Rp 120.000</div>
+                                        <button class="btn-add-to-cart" data-id="1" data-name="Parfum For Oliver" data-price="120000" data-image="https://i.postimg.cc/J46RhGfq/A-clear-glass-bottle-of-yellow-perfume-with-a-black-cap-and-a-white-label-that-says-FOR-Oliver-an.png">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/C5xWy4xV/A-clean-product-photo-of-a-perfume-bottle-labeled-For-Candu-with-a-black-cap-and-clear-liquid-insi.png" alt="Parfum 2">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Parfum For Candu</h4>
+                                        <div class="description">Size 30ml
+                    bonus tester 10ml</div>
+                                        <div class="price">Rp 120.000</div>
+                                        <button class="btn-add-to-cart" data-id="2" data-name="Parfum  For Candu" data-price="120000" data-image="https://i.postimg.cc/C5xWy4xV/A-clean-product-photo-of-a-perfume-bottle-labeled-For-Candu-with-a-black-cap-and-clear-liquid-insi.png">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/PfcjGBY3/A-clean-product-photo-of-a-perfume-bottle-labeled-For-Cuddle-with-a-black-cap-and-clear-liquid-ins.png" alt="Parfum 3">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Parfum For Cuddle</h4>
+                                        <div class="description">Size 30ml
+                    bonus tester 10ml</div>
+                                        <div class="price">Rp 120.000</div>
+                                        <button class="btn-add-to-cart" data-id="3" data-name="Parfum For Cuddle" data-price="120000" data-image="https://i.postimg.cc/PfcjGBY3/A-clean-product-photo-of-a-perfume-bottle-labeled-For-Cuddle-with-a-black-cap-and-clear-liquid-ins.png">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/L5gG68Ly/A-clear-glass-bottle-of-yellow-perfume-with-a-black-cap-and-a-white-label-that-says-FOR-Me-time-a.png" alt="Parfum 4">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Parfum For Me time</h4>
+                                        <div class="description">Size 30ml
+                    bonus tester 10ml</div>
+                                        <div class="price">Rp 120.000</div>
+                                        <button class="btn-add-to-cart" data-id="4" data-name="Parfum For Me time" data-price="120000" data-image="https://i.postimg.cc/L5gG68Ly/A-clear-glass-bottle-of-yellow-perfume-with-a-black-cap-and-a-white-label-that-says-FOR-Me-time-a.png">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/QxQhpfKf/A-clean-product-photo-of-a-perfume-bottle-labeled-For-Bestie-with-a-black-cap-and-yellow-liquid-in.png" alt="Parfum 5">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Parfum For Bestie</h4>
+                                        <div class="description">Size 30ml
+                    bonus tester 10ml</div>
+                                        <div class="price">Rp 120.000</div>
+                                        <button class="btn-add-to-cart" data-id="5" data-name="Parfum For Bestie" data-price="120000" data-image="https://i.postimg.cc/QxQhpfKf/A-clean-product-photo-of-a-perfume-bottle-labeled-For-Bestie-with-a-black-cap-and-yellow-liquid-in.png">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/Prjkr1VY/result.png" alt="Parfum 6">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Parfum For Staycation</h4>
+                                        <div class="description">Size 30ml
+                     bonus tester 10ml</div>
+                                        <div class="price">Rp 120.000</div>
+                                        <button class="btn-add-to-cart" data-id="6" data-name="Parfum For Staycation" data-price="120000" data-image="https://i.postimg.cc/Prjkr1VY/result.png">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/43nDFPnk/download.jpg" alt="Parfum 7">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Parfum For Xoxo</h4>
+                                        <div class="description">Size 30ml
+                    bonus tester 10ml</div>
+                                        <div class="price">Rp 120.000</div>
+                                        <button class="btn-add-to-cart" data-id="7" data-name="Parfum For Xoxo" data-price="120000" data-image="https://i.postimg.cc/43nDFPnk/download.jpg">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/sxPqZ0HS/A-clean-product-photo-of-a-perfume-bottle-labeled-For-Tabrani-with-a-black-cap-and-yellow-liquid-i.png" alt="Parfum 8">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Parfum For Tabrani</h4>
+                                        <div class="description">Size 30ml
+                    bonus tester 10ml</div>
+                                        <div class="price">Rp 120.000</div>
+                                        <button class="btn-add-to-cart" data-id="8" data-name="Parfum For Tabrani" data-price="120000" data-image="https://i.postimg.cc/sxPqZ0HS/A-clean-product-photo-of-a-perfume-bottle-labeled-For-Tabrani-with-a-black-cap-and-yellow-liquid-i.png">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Skincare -->
+                <div class="category">
+                    <h3>Skincare</h3>
+                    </p>
+                    
+                    <div class="product-scroll-container">
+                        <div class="product-scroll-wrapper">
+                            <div class="product-scroll-gallery">
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/Ss6DZYLb/IMG-20250625-215127.jpg" alt="Skincare 1">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Acne Night Cream</h4>
+                                        <div class="description">Size 20gr</div>
+                                        <div class="price">Rp 115.000</div>
+                                        <button class="btn-add-to-cart" data-id="9" data-name="Acne Night Cream" data-price="115000" data-image="https://i.postimg.cc/Ss6DZYLb/IMG-20250625-215127.jpg">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/vBbWZqnC/IMG-20250625-215205.jpg" alt="Skincare 2">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Brightly Night Cream</h4>
+                                        <div class="description">Size 20gr</div>
+                                        <div class="price">Rp 115.000</div>
+                                        <button class="btn-add-to-cart" data-id="10" data-name="Brightly Night Cream" data-price="115000" data-image="https://i.postimg.cc/vBbWZqnC/IMG-20250625-215205.jpg">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/fykSV6Rq/IMG-20250625-215026.jpg" alt="Skincare 3">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Biotic Moisturizer</h4>
+                                        <div class="description">Size 20gr</div>
+                                        <div class="price">Rp 115.000</div>
+                                        <button class="btn-add-to-cart" data-id="11" data-name="Biotic Moisturizer" data-price="115000" data-image="https://i.postimg.cc/fykSV6Rq/IMG-20250625-215026.jpg">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/wxP7W4vH/IMG-20250625-214939.jpg" alt="Skincare 4">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Acne Day Cream</h4>
+                                        <div class="description">Size 20gr</div>
+                                        <div class="price">Rp 115.000</div>
+                                        <button class="btn-add-to-cart" data-id="12" data-name="Acne Day Cream" data-price="115000" data-image="https://i.postimg.cc/wxP7W4vH/IMG-20250625-214939.jpg">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/zDLnXgHz/IMG-20250625-214821.jpg" alt="Skincare 5">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Brightly Day Cream</h4>
+                                        <div class="description">Size 20gr</div>
+                                        <div class="price">Rp 115.000</div>
+                                        <button class="btn-add-to-cart" data-id="13" data-name="Brightly Day Cream" data-price="115000" data-image="https://i.postimg.cc/zDLnXgHz/IMG-20250625-214821.jpg">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/PxC8xgx3/IMG-20250625-215056.jpg" alt="Skincare 6">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Ceramide Barrier</h4>
+                                        <div class="description">Size 20gr</div>
+                                        <div class="price">Rp 115.000</div>
+                                        <button class="btn-add-to-cart" data-id="14" data-name="Ceramid Barrier" data-price="115000" data-image="https://i.postimg.cc/PxC8xgx3/IMG-20250625-215056.jpg">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/JnjMPxd7/IMG-20250625-214906.jpg" alt="Skincare 7">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Herbalism Mask</h4>
+                                        <div class="description">Size 100gr</div>
+                                        <div class="price">Rp 125.000</div>
+                                        <button class="btn-add-to-cart" data-id="15" data-name="Herbalism Mask" data-price="125000" data-image="https://i.postimg.cc/JnjMPxd7/IMG-20250625-214906.jpg">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/R0HBZGm1/IMG-20250625-214748.jpg" alt="Skincare 8">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Seriously Soothing</h4>
+                                        <div class="description">Size 100gr</div>
+                                        <div class="price">Rp 125.000</div>
+                                        <button class="btn-add-to-cart" data-id="16" data-name="Seriously Soothing" data-price="125000" data-image="https://i.postimg.cc/R0HBZGm1/IMG-20250625-214748.jpg">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hoodie -->
+                <div class="category">
+                    <h3>Hoodie</h3>
+                    </p>
+                    
+                    <div class="product-scroll-container">
+                        <div class="product-scroll-wrapper">
+                            <div class="product-scroll-gallery">
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/SN1FLHN7/id-11134207-7rbk1-ma2mqlcfcqwjbc.jpg" alt="Hoodie 1">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Hoodie Enoch</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 140.000</div>
+                                        <button class="btn-add-to-cart" data-id="17" data-name="Hoodie Enoch" data-price="140000" data-image="https://i.postimg.cc/SN1FLHN7/id-11134207-7rbk1-ma2mqlcfcqwjbc.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/wBJCpv50/wmremove-transformed-1.webp" alt="Hoodie 2">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Hoodie Troublenaker</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 140.000</div>
+                                        <button class="btn-add-to-cart" data-id="18" data-name="Hoodie Troublenaker" data-price="140000" data-image="https://i.postimg.cc/wBJCpv50/wmremove-transformed-1.webp" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/TYDqQDT7/id-11134207-7rbka-ma2409na0ldc69.jpg" alt="Hoodie 3">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Hoodie Preface</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 140.000</div>
+                                        <button class="btn-add-to-cart" data-id="19" data-name="Hoodie Preface" data-price="140000" data-image="https://i.postimg.cc/TYDqQDT7/id-11134207-7rbka-ma2409na0ldc69.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/ZY9Mt0T3/id-11134207-7rbk9-m940g1jmz0uacd.jpg" alt="Hoodie 4">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Hoodie Positive</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 140.000</div>
+                                        <button class="btn-add-to-cart" data-id="20" data-name="Hoodie Positive" data-price="140000" data-image="https://i.postimg.cc/ZY9Mt0T3/id-11134207-7rbk9-m940g1jmz0uacd.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/GmjMJyQ0/id-11134207-7rbk5-mafdt4wtoyaab7.jpg" alt="Hoodie 5">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Hoodie Waize</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 140.000</div>
+                                        <button class="btn-add-to-cart" data-id="21" data-name="Hoodie Waize" data-price="140000" data-image="https://i.postimg.cc/GmjMJyQ0/id-11134207-7rbk5-mafdt4wtoyaab7.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/htKsjGq2/id-11134207-7rbk7-ma80od8e61ls80.jpg" alt="Hoodie 6">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Hoodie Missed</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 140.000</div>
+                                        <button class="btn-add-to-cart" data-id="22" data-name="Hoodie Missed" data-price="140000" data-image="https://i.postimg.cc/htKsjGq2/id-11134207-7rbk7-ma80od8e61ls80.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/SQ8ff9SZ/IMG-20250626-211252.jpg" alt="Hoodie 7">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Hoodie Jico</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 140.000</div>
+                                        <button class="btn-add-to-cart" data-id="23" data-name="Hoodie Jico" data-price="140000" data-image="https://i.postimg.cc/SQ8ff9SZ/IMG-20250626-211252.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/1t04fySK/id-11134207-7r98z-lxu9nwcut34ud8.jpg" alt="Hoodie 8">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Hoodie Satisfaction</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 140.000</div>
+                                        <button class="btn-add-to-cart" data-id="24" data-name="Hoodie Satisfaction" data-price="140000" data-image="https://i.postimg.cc/1t04fySK/id-11134207-7r98z-lxu9nwcut34ud8.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/nr0zGTCj/e5fddf2f44ff4d6ea706696b13159b26-tplv-aphluv4xwc-resize-webp-800-800.webp" alt="Hoodie 9">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Hoodie Egtn</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 140.000</div>
+                                        <button class="btn-add-to-cart" data-id="23" data-name="Hoodie Egtn" data-price="140000" data-image="https://i.postimg.cc/nr0zGTCj/e5fddf2f44ff4d6ea706696b13159b26-tplv-aphluv4xwc-resize-webp-800-800.webp" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- T-Shirt -->
+                <div class="category">
+                    <h3>T-Shirt</h3>
+                    </p>
+                    
+                    <div class="product-scroll-container">
+                        <div class="product-scroll-wrapper">
+                            <div class="product-scroll-gallery">
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/hvP4vxpS/id-11134207-7rbkc-m7uks24fkyg962.jpg" alt="T-Shirt 1">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kaos Boxy Deep</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 95.000</div>
+                                        <button class="btn-add-to-cart" data-id="25" data-name="Kaos Boxy Deep" data-price="95000" data-image="https://i.postimg.cc/hvP4vxpS/id-11134207-7rbkc-m7uks24fkyg962.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/jd1qqDNb/id-11134207-7rash-m5czqd676am875.jpg" alt="T-Shirt 2">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kaos Boxy Hole</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 95.000</div>
+                                        <button class="btn-add-to-cart" data-id="26" data-name="Kaos Boxy Hole" data-price="95000" data-image="https://i.postimg.cc/jd1qqDNb/id-11134207-7rash-m5czqd676am875.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/26Cr9hp4/id-11134207-7rasg-m2pplzxwfvdsc0.jpg" alt="T-Shirt 3">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kaos Boxy Death Will</h4>
+                                        <div class="description">Warna hitam, purple
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 95.000</div>
+                                        <button class="btn-add-to-cart" data-id="27" data-name="Kaos Boxy Death Will" data-price="95000" data-image="https://i.postimg.cc/26Cr9hp4/id-11134207-7rasg-m2pplzxwfvdsc0.jpg" data-colors="Hitam,Purple" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/ZY74jWwd/id-11134207-7rase-m0sf1dzkfdbr83.jpg" alt="T-Shirt 4">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kaos Boxy Allive</h4>
+                                        <div class="description">Warna hitam, biru muda
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 95.000</div>
+                                        <button class="btn-add-to-cart" data-id="28" data-name="Kaos Boxy Allive" data-price="95000" data-image="https://i.postimg.cc/ZY74jWwd/id-11134207-7rase-m0sf1dzkfdbr83.jpg" data-colors="Hitam,Biru Muda" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/m2PRnTn6/id-11134207-7r98v-luoqe1mhq7csb8.jpg" alt="T-Shirt 5">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kaos Boxy Wush Club</h4>
+                                        <div class="description">Warna benhur, purple
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 95.000</div>
+                                        <button class="btn-add-to-cart" data-id="29" data-name="Kaos Boxy Wush Club" data-price="95000" data-image="https://i.postimg.cc/m2PRnTn6/id-11134207-7r98v-luoqe1mhq7csb8.jpg" data-colors="Benhur,Purple" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/QNyZ1RMg/id-11134207-7rbk2-m8n9qb254t8bee.jpg" alt="T-Shirt 6">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kaos Boxy Rise</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 95.000</div>
+                                        <button class="btn-add-to-cart" data-id="30" data-name="Kaos Boxy Rise" data-price="95000" data-image="https://i.postimg.cc/QNyZ1RMg/id-11134207-7rbk2-m8n9qb254t8bee.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/g0DfJ75Z/id-11134207-7rbkc-m7ukgsvmuc7k26.jpg" alt="T-Shirt 7">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kaos Boxy Less</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 95.000</div>
+                                        <button class="btn-add-to-cart" data-id="31" data-name="Kaos Boxy Less" data-price="95000" data-image="https://i.postimg.cc/g0DfJ75Z/id-11134207-7rbkc-m7ukgsvmuc7k26.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/cCKjFLJR/id-11134207-7rbk7-m9xw0ts6bx2510.jpg" alt="T-Shirt 8">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kaos Boxy Agnud</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 95.000</div>
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Agnud" data-price="95000" data-image="https://i.postimg.cc/cCKjFLJR/id-11134207-7rbk7-m9xw0ts6bx2510.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/MTHrGpVC/id-11134207-7rase-m650vdkr7zbsec.jpg" alt="T-Shirt 9">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy 777</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos boxy Agnud" data-price="95000" data-image="https://i.postimg.cc/MTHrGpVC/id-11134207-7rase-m650vdkr7zbsec.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>   
+                                     </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/Z5cSB0vn/id-11134207-7rbk4-ma5jxgtmprus27.jpg" alt="T-Shirt 10">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy Society</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Society" data-price="95000" data-image="https://i.postimg.cc/Z5cSB0vn/id-11134207-7rbk4-ma5jxgtmprus27.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/vH7RkDzh/sg-11134201-7rfhq-ma14d0dftjkp4c.jpg" alt="T-Shirt 11">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy Genesis</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Genesis" data-price="95000" data-image="https://i.postimg.cc/vH7RkDzh/sg-11134201-7rfhq-ma14d0dftjkp4c.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/D0dCj4Tb/id-11134207-7rasa-m5y1dml7ltdyb9.jpg" alt="T-Shirt 12">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy DGCK</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Genesis" data-price="95000" data-image="https://i.postimg.cc/D0dCj4Tb/id-11134207-7rasa-m5y1dml7ltdyb9.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                   </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/HxKHYKct/id-11134207-7rbk9-m8ppfuah1ujxf1.jpg" alt="T-Shirt 13">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy Domestic</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Domestic" data-price="95000" data-image="https://i.postimg.cc/HxKHYKct/id-11134207-7rbk9-m8ppfuah1ujxf1.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                   </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/wBrTM3nJ/id-11134207-7rbk1-m7ujyp7qbfqhf5.jpg" alt="T-Shirt 14">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy Life</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Life" data-price="95000" data-image="https://i.postimg.cc/wBrTM3nJ/id-11134207-7rbk1-m7ujyp7qbfqhf5.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                   </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/zvrNHh7L/id-11134207-7rbkc-m8a8sxz4tjvx6b.jpg" alt="T-Shirt 15">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy LosAngeles</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy LosAngeles" data-price="95000" data-image="https://i.postimg.cc/zvrNHh7L/id-11134207-7rbkc-m8a8sxz4tjvx6b.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                   </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/4xdgcs61/id-11134207-7rbk9-ma23b2ll7pzy78.jpg" alt="T-Shirt 16">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy bintang</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Bintang" data-price="95000" data-image="https://i.postimg.cc/4xdgcs61/id-11134207-7rbk9-ma23b2ll7pzy78.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                   </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/0yLBNscj/id-11134207-7rasl-m4zyp46y37h96b.jpg" alt="T-Shirt 17">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy Dreamer</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Dreamer" data-price="95000" data-image="https://i.postimg.cc/0yLBNscj/id-11134207-7rasl-m4zyp46y37h96b.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                  </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/KcRHSfPJ/id-11134207-7rasc-m47g61j7xkfu51.jpg" alt="T-Shirt 18">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy Paradise</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Paradise" data-price="95000" data-image="https://i.postimg.cc/KcRHSfPJ/id-11134207-7rasc-m47g61j7xkfu51.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                   </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/MGgjczLc/id-11134201-7r98p-lyggaob0qmzs37.jpg" alt="T-Shirt 19">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy Have</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Have" data-price="95000" data-image="https://i.postimg.cc/MGgjczLc/id-11134201-7r98p-lyggaob0qmzs37.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                   </div>
+                                </div>
+                                <div class="product-scroll-item">
+
+                                    <div class="product-scroll-img">
+
+                                        <img src="https://i.postimg.cc/8k4P91bh/IMG-20250626-155722.jpg" alt="T-Shirt 20">
+
+                                    </div>
+
+                                    <div class="product-scroll-info">
+
+                                        <h4>Kaos Boxy Trust Heart</h4>
+
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+
+                                        <div class="price">Rp 95.000</div>
+
+                                        <button class="btn-add-to-cart" data-id="32" data-name="Kaos Boxy Trust Heart" data-price="95000" data-image="https://i.postimg.cc/8k4P91bh/IMG-20250626-155722.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button> 
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Polo Shirt -->
+                <div class="category">
+                    <h3>Polo Shirt</h3>
+                    </p>
+                    
+                    <div class="product-scroll-container">
+                        <div class="product-scroll-wrapper">
+                            <div class="product-scroll-gallery">
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/cL4DhcLR/id-11134207-7r98t-lnuvmop13b7t60.jpg" alt="Polo Shirt 1">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Pleasure</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="33" data-name="PoloShirt Pleasure" data-price="145000" data-image="https://i.postimg.cc/cL4DhcLR/id-11134207-7r98t-lnuvmop13b7t60.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/5ygBQZvZ/id-11134207-7r98w-lpu39n5w5lo85e.jpg" alt="Polo Shirt 2">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Thenational</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="34" data-name="PoloShirt Thenational" data-price="145000" data-image="https://i.postimg.cc/5ygBQZvZ/id-11134207-7r98w-lpu39n5w5lo85e.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/90kfkbjD/id-11134207-7rasm-m26ez6u03qgw04.jpg" alt="Polo Shirt 3">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Rowndvsn</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="35" data-name="PoloShirt Rowndvsn" data-price="145000" data-image="https://i.postimg.cc/90kfkbjD/id-11134207-7rasm-m26ez6u03qgw04.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/zvFsbXx8/id-11134207-7r98q-lowc8cd9h85vd0.jpg" alt="Polo Shirt 4">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Essential</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="36" data-name="PoloShirt Essential" data-price="145000" data-image="https://i.postimg.cc/zvFsbXx8/id-11134207-7r98q-lowc8cd9h85vd0.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/PJS6nL6p/sg-11134201-7rcch-m6hrb27q4mtu9a.jpg" alt="Polo Shirt 5">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Champions</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="37" data-name="PoloShirt Champions" data-price="145000" data-image="https://i.postimg.cc/PJS6nL6p/sg-11134201-7rcch-m6hrb27q4mtu9a.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/zv4gh8v2/id-11134207-7rbk1-m9dzeu8ifqzi1c.jpg" alt="Polo Shirt 6">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Independent</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="38" data-name="PoloShirt Independent" data-price="145000" data-image="https://i.postimg.cc/zv4gh8v2/id-11134207-7rbk1-m9dzeu8ifqzi1c.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/8Ck5FR77/id-11134207-23020-cf261dw04jnve3.jpg" alt="Polo Shirt 7">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Mildstone</h4>
+                                        <div class="description">Warna hitam, cream
+                    ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="39" data-name="PoloShirt Eastern" data-price="145000" data-image="https://i.postimg.cc/8Ck5FR77/id-11134207-23020-cf261dw04jnve3.jpg" data-colors="Hitam,Cream" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/mDwLpwj4/id-11134207-7r992-lw3sr6xnzi9a58.jpg" alt="Polo Shirt 8">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Behaviour</h4>
+                                        <div class="description">Warna hitam, cokelat
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="40" data-name="PoloShirt Behaviour" data-price="145000" data-image="https://i.postimg.cc/mDwLpwj4/id-11134207-7r992-lw3sr6xnzi9a58.jpg" data-colors="Hitam,Cokelat" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                     </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/d1pYxxCz/id-11134207-7r98u-llyovta9n0gv44.jpg" alt="Polo Shirt 9">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Cultanimo</h4>
+                                        <div class="description">Warna hitam, biru tua
+                    ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="39" data-name="PoloShirt Cultanimo" data-price="145000" data-image="https://i.postimg.cc/d1pYxxCz/id-11134207-7r98u-llyovta9n0gv44.jpg" data-colors="Hitam,Biru Tua" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/8zjb1Xfy/id-11134207-7rask-m176levz8ga824.jpg" alt="Polo Shirt 10">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Easterwood</h4>
+                                        <div class="description">Warna hitam, cream
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="39" data-name="PoloShirt Easterwood" data-price="145000" data-image="https://i.postimg.cc/8zjb1Xfy/id-11134207-7rask-m176levz8ga824.jpg" data-colors="Hitam,Cream" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                     </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/qvswBTKk/id-11134207-7r98z-llyovta9ptlrb0.jpg" alt="Polo Shirt 11">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Goster</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="39" data-name="PoloShirt Goster" data-price="145000" data-image="https://i.postimg.cc/qvswBTKk/id-11134207-7r98z-llyovta9ptlrb0.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                     </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/XJCch6nS/id-11134207-7rbk6-m9dzeu8ild9afc.jpg" alt="Polo Shirt 12">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>PoloShirt Crafters</h4>
+                                        <div class="description">Warna hitam, putih
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 145.000</div>
+                                        <button class="btn-add-to-cart" data-id="39" data-name="PoloShirt Easterwood" data-price="145000" data-image="https://i.postimg.cc/XJCch6nS/id-11134207-7rbk6-m9dzeu8ild9afc.jpg" data-colors="Hitam,Putih" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                   </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kemeja Flannel -->
+                <div class="category">
+                    <h3>Kemeja Flannel</h3>
+                    </p>
+                    
+                    <div class="product-scroll-container">
+                        <div class="product-scroll-wrapper">
+                            <div class="product-scroll-gallery">
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/FKKqjV68/id-11134207-7ras8-m2f991qr9wmb3b.jpg" alt="Flannel 1">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kemeja Flannel 01</h4>
+                                        <div class="description">Bahan cotton premium
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 150.000</div>
+                                        <button class="btn-add-to-cart" data-id="41" data-name="Kemeja Flannel 01" data-price="150000" data-image="https://i.postimg.cc/FKKqjV68/id-11134207-7ras8-m2f991qr9wmb3b.jpg" data-colors="Merah,Hitam,Biru" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/ZqFRdZ1V/475e47e4484253129633099409cc0e35.jpg'" alt="Flannel 2">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kemeja Flannel 02</h4>
+                                        <div class="description">Bahan cotton premium
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 150.000</div>
+                                        <button class="btn-add-to-cart" data-id="42" data-name="Kemeja Flannel 02" data-price="150000" data-image="https://i.postimg.cc/ZqFRdZ1V/475e47e4484253129633099409cc0e35.jpg'" data-colors="Merah,Hitam,Biru" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/NjtLf5n5/a474b7892ea342d3f548eacc240d7509.jpg" alt="Flannel 3">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kemeja Flannel 03</h4>
+                                        <div class="description">Bahan cotton premium
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 150.000</div>
+                                        <button class="btn-add-to-cart" data-id="43" data-name="Kemeja Flannel 03" data-price="150000" data-image="https://i.postimg.cc/NjtLf5n5/a474b7892ea342d3f548eacc240d7509.jpg" data-colors="Merah,Hitam,Biru" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/xd40HC6G/sg-11134201-22090-uprpepsp7xhva4.jpg" alt="Flannel 4">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kemeja Flannel 04</h4>
+                                        <div class="description">Bahan cotton premium
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 150.000</div>
+                                        <button class="btn-add-to-cart" data-id="44" data-name="Kemeja Flannel 04" data-price="150000" data-image="https://i.postimg.cc/xd40HC6G/sg-11134201-22090-uprpepsp7xhva4.jpg" data-colors="Merah,Hitam,Biru" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/tCpHsWXQ/id-11134207-7r98t-lmmsvemzd129d0.jpg" alt="Flannel 5">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kemeja Flannel 05</h4>
+                                        <div class="description">Bahan cotton premium
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 150.000</div>
+                                        <button class="btn-add-to-cart" data-id="45" data-name="Kemeja Flannel 05" data-price="150000" data-image="https://i.postimg.cc/tCpHsWXQ/id-11134207-7r98t-lmmsvemzd129d0.jpg" data-colors="Merah,Hitam,Biru" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/yYv2WGQc/6e4c67e0f0ae3cf0270d529108eb64f4.jpg" alt="Flannel 6">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kemeja Flannel 06</h4>
+                                        <div class="description">Bahan cotton premium
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 150.000</div>
+                                        <button class="btn-add-to-cart" data-id="46" data-name="Kemeja Flannel 06" data-price="150000" data-image="https://i.postimg.cc/yYv2WGQc/6e4c67e0f0ae3cf0270d529108eb64f4.jpg" data-colors="Merah,Hitam,Biru" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/W4R846v0/id-11134207-7r990-lzw6qlkcb0dp5e.jpg" alt="Flannel 7">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kemeja Flannel 07</h4>
+                                        <div class="description">Bahan cotton premium
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 150.000</div>
+                                        <button class="btn-add-to-cart" data-id="47" data-name="Kemeja Flannel 07" data-price="150000" data-image="https://i.postimg.cc/W4R846v0/id-11134207-7r990-lzw6qlkcb0dp5e.jpg" data-colors="Merah,Hitam,Biru" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/8CBRP2wV/e737a6b37e060fac5623d7561b2adbd3.jpg" alt="Flannel 8">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kemeja Flannel 08</h4>
+                                        <div class="description">Bahan cotton premium
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 150.000</div>
+                                        <button class="btn-add-to-cart" data-id="48" data-name="Kemeja Flannel 08" data-price="150000" data-image="https://i.postimg.cc/8CBRP2wV/e737a6b37e060fac5623d7561b2adbd3.jpg" data-colors="Merah,Hitam,Biru" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/pXFndNX1/f0b35aae12944e33fb5f5a65ef283393.jpg" alt="Flannel 9">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Kemeja Flannel 09</h4>
+                                        <div class="description">Bahan cotton premium
+                    Ukuran M, L, XL</div>
+                                        <div class="price">Rp 150.000</div>
+                                        <button class="btn-add-to-cart" data-id="48" data-name="Kemeja Flannel 09" data-price="150000" data-image="https://i.postimg.cc/pXFndNX1/f0b35aae12944e33fb5f5a65ef283393.jpg" data-colors="Merah,Hitam,Biru" data-sizes="M,L,XL">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                   </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Celana -->
+                <div class="category">
+                    <h3>Celana Panjang</h3>
+                    </p>
+                    
+                    <div class="product-scroll-container">
+                        <div class="product-scroll-wrapper">
+                            <div class="product-scroll-gallery">
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/BQTbWK07/id-11134207-7r98q-lmfti21lu9bo27.jpg" alt="Celana 1">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Celana Panjang 01</h4>
+                                        <div class="description">Warna hitam, abu, hijau
+                    UK 37,38,39,40,41,42,43</div>
+                                        <div class="price">Rp 135.000</div>
+                                        <button class="btn-add-to-cart" data-id="49" data-name="Celana Panjang 01" data-price="135000" data-image="https://i.postimg.cc/BQTbWK07/id-11134207-7r98q-lmfti21lu9bo27.jpg" data-colors="Hitam,Abu,Hijau" data-sizes="37,38,39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/BnwGRSXw/id-11134207-7r98s-lp0cccdt6lhpe9.jpg" alt="Celana 2">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Celana Panjang 02</h4>
+                                        <div class="description">Warna grey, hitam, biru
+                    UK 37,38,39,40,41,42,43</div>
+                                        <div class="price">Rp 135.000</div>
+                                        <button class="btn-add-to-cart" data-id="50" data-name="Celana Panjang 02" data-price="135000" data-image="https://i.postimg.cc/BnwGRSXw/id-11134207-7r98s-lp0cccdt6lhpe9.jpg" data-colors="Grey,Hitam,Biru" data-sizes="37,38,39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/T15cFkWS/id-11134207-7r98z-lrzpt0mn8p4k65.jpg" alt="Celana 3">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Celana Panjang 03</h4>
+                                        <div
+                                       class="description">Warna hijau, abu, khaki
+                    UK 37,38,39,40,41,42,43</div>
+                                        <div class="price">Rp 135.000</div>
+                                        <button class="btn-add-to-cart" data-id="51" data-name="Celana Panjang 03" data-price="135000" data-image="https://i.postimg.cc/T15cFkWS/id-11134207-7r98z-lrzpt0mn8p4k65.jpg" data-colors="Hijau,Abu,Khaki" data-sizes="37,38,39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/VkZWsQBT/id-11134207-7r98u-lwuuf9eh72ga2d.jpg" alt="Celana 4">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Celana Panjang 04</h4>
+                                        <div class="description">Warna biru, hitam, grey
+                    UK 37,38,39,40,41,42,43</div>
+                                        <div class="price">Rp 135.000</div>
+                                        <button class="btn-add-to-cart" data-id="52" data-name="Celana Panjang 04" data-price="135000" data-image="https://i.postimg.cc/VkZWsQBT/id-11134207-7r98u-lwuuf9eh72ga2d.jpg" data-colors="Biru,Hitam,Grey" data-sizes="37,38,39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/pVB8XMPZ/id-11134207-7ras9-m3oou9n2e0via3.jpg" alt="Celana 5">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Celana Panjang 05</h4>
+                                        <div class="description">Warna biru, hitam, navy
+                    UK 37,38,39,40,41,42,43</div>
+                                        <div class="price">Rp 135.000</div>
+                                        <button class="btn-add-to-cart" data-id="53" data-name="Celana Panjang 05" data-price="135000" data-image="https://i.postimg.cc/pVB8XMPZ/id-11134207-7ras9-m3oou9n2e0via3.jpg" data-colors="Biru,Hitam,Navy" data-sizes="37,38,39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/br8Jdy09/id-11134207-7rasj-m39b6zydu0o302.jpg" alt="Celana 6">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Celana Panjang 06</h4>
+                                        <div class="description">Warna krem, mocca, grey
+                    UK 37,38,39,40,41,42,43</div>
+                                        <div class="price">Rp 135.000</div>
+                                        <button class="btn-add-to-cart" data-id="54" data-name="Celana Panjang 06" data-price="135000" data-image="https://i.postimg.cc/br8Jdy09/id-11134207-7rasj-m39b6zydu0o302.jpg" data-colors="Krem,Mocca,Grey" data-sizes="37,38,39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/xThd96N5/id-11134207-7rase-m1peayamphlo58.jpg" alt="Celana 7">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Celana Panjang 07</h4>
+                                        <div class="description">Warna hitam, khaki 
+                    UK37,38,39,40,41,42,43</div>
+                                        <div class="price">Rp 135.000</div>
+                                        <button class="btn-add-to-cart" data-id="55" data-name="Celana Panjang 07" data-price="135000" data-image="https://i.postimg.cc/xThd96N5/id-11134207-7rase-m1peayamphlo58.jpg" data-colors="Hitam,Khaki" data-sizes="37,38,39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/MKHw5fGj/id-11134207-7r98s-lug565cw0jbk64.jpg" alt="Celana 8">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Celana Panjang 08</h4>
+                                        <div class="description">Warna hitam, khaki, grey
+                    UK 37,38,39,40,41,42,43</div>
+                                        <div class="price">Rp 135.000</div>
+                                        <button class="btn-add-to-cart" data-id="56" data-name="Celana Panjang 08" data-price="135000" data-image="https://i.postimg.cc/MKHw5fGj/id-11134207-7r98s-lug565cw0jbk64.jpg" data-colors="Hitam,Khaki,Grey" data-sizes="37,38,39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sepatu -->
+                <div class="category">
+                    <h3>Sepatu</h3>
+                    </p>
+                    
+                    <div class="product-scroll-container">
+                        <div class="product-scroll-wrapper">
+                            <div class="product-scroll-gallery">
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/LXfhVHzG/IMG-20250627-143143.jpg" alt="Sepatu 1">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J01</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="57" data-name="Sneakers J01" data-price="142000" data-image="https://i.postimg.cc/LXfhVHzG/IMG-20250627-143143.jpg" data-colors="Hitam" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/Pr4LhWzF/IMG-20250627-144301.jpg" alt="Sepatu 2">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J02</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam, hijau, merah</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="58" data-name="Sneakers J02" data-price="142000" data-image="https://i.postimg.cc/Pr4LhWzF/IMG-20250627-144301.jpg" data-colors="Hitam,Hijau,Merah" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/Nfb8X4Gm/IMG-20250627-144152.jpg" alt="Sepatu 3">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J03</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam, navy, merah</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="59" data-name="Sneakers J03" data-price="142000" data-image="https://i.postimg.cc/Nfb8X4Gm/IMG-20250627-144152.jpg" data-colors="Hitam,Navy,Merah" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/Y2QBt4rJ/IMG-20250627-144414.jpg" alt="Sepatu 4">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J04</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="60" data-name="Sneakers J04" data-price="142000" data-image="https://i.postimg.cc/Y2QBt4rJ/IMG-20250627-144414.jpg" data-colors="Hitam" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/mZp2F1fh/IMG-20250627-143940.jpg" alt="Sepatu 5">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J05</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hijau, orange</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="61" data-name="Sneakers J05" data-price="142000" data-image="https://i.postimg.cc/mZp2F1fh/IMG-20250627-143940.jpg" data-colors="Hijau,Orange" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/s2f0CX6C/IMG-20250627-151107.jpg" alt="Sepatu 6">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J06</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam, </div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="62" data-name="Sneakers 06" data-price="142000" data-image="https://i.postimg.cc/s2f0CX6C/IMG-20250627-151107.jpg" data-colors="Hitam" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/d3THwQ7s/IMG-20250627-151641.jpg" alt="Sepatu 7">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J07</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam, navy</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="63" data-name="Sneakers 07" data-price="142000" data-image="https://i.postimg.cc/d3THwQ7s/IMG-20250627-151641.jpg" data-colors="Hitam,Navy" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/GtXQbJHF/IMG-20250627-144040.jpg" alt="Sepatu 8">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J08</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam, cokelat</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="64" data-name="Sneakers J08" data-price="142000" data-image="https://i.postimg.cc/GtXQbJHF/IMG-20250627-144040.jpg" data-colors="Hitam,Cokelat" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                     </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/jjGSMG87/IMG-20250628-080016.jpg" alt="Sepatu 9">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J09</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam, cokelat</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="64" data-name="Sneakers J09" data-price="142000" data-image="https://i.postimg.cc/jjGSMG87/IMG-20250628-080016.jpg" data-colors="Hitam,Cokelat" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                     </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/3N37672d/IMG-20250628-075915.jpg" alt="Sepatu 10">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J10</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam, putih</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="64" data-name="Sneakers J10" data-price="142000" data-image="https://i.postimg.cc/3N37672d/IMG-20250628-075915.jpg" data-colors="Hitam,Putih" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                     </div>
+                                </div>
+                                <div class="product-scroll-item">
+                                    <div class="product-scroll-img">
+                                        <img src="https://i.postimg.cc/WpSP3BMw/IMG-20250628-075742.jpg" alt="Sepatu 11">
+                                    </div>
+                                    <div class="product-scroll-info">
+                                        <h4>Sneakers J11</h4>
+                                        <div class="description">Ukuran 39,40,41,42,43
+                    Warna hitam</div>
+                                        <div class="price">Rp 142.000</div>
+                                        <button class="btn-add-to-cart" data-id="64" data-name="Sneakers J11" data-price="142000" data-image="https://i.postimg.cc/WpSP3BMw/IMG-20250628-075742.jpg" data-colors="Hitam" data-sizes="39,40,41,42,43">
+                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                   </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Apa Kata Pelanggan Kami?</h2>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-item">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Parfum dari Society benar-benar tahan lama dan aromanya sangat khas. Sudah beli yang kedua kalinya dan tetap puas!"</p>
+                    <p class="testimonial-author"> Andi, Jakarta</p>
+                </div>
+                <div class="testimonial-item">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Hoodienya sangat nyaman dipakai, bahannya lembut dan tidak mudah kusut. Desainnya juga simple tapi stylish."</p>
+                    <p class="testimonial-author"> Rina, Bandung</p>
+                </div>
+                <div class="testimonial-item">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Skincare dari Society membantu kulit saya yang berminyak jadi lebih terkontrol. Hasilnya terlihat dalam 2 minggu pemakaian."</p>
+                    <p class="testimonial-author"> Dini, Surabaya</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Kami Siap Membantu Anda</h2>
+            </div>
+            <div class="contact-form">
+                <form>
+                    <div class="form-group">
+                        <label for="name">Nama</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Anda</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">No Telepon</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="product">Produk</label>
+                        <input type="text" id="product" name="product">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Pesan Anda</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Kirim Pertanyaan Anda</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">CV SOCIETY </div>
+                    
+                    <p>Berkomitmen menghadirkan produk berkualitas tinggi harga terjangkau dengan pelayanan profesional untuk memenuhi kebutuhan gaya hidup modern.</p>
+                    
+                </div>
+                <div class="footer-links">
+                    <h3>Produk</h3>
+                    <ul>
+                        <li><a href="#">Parfum</a></li>
+                        <li><a href="#">Skincare</a></li>
+                        <li><a href="#">Hoodie</a></li>
+                        <li><a href="#">T-Shirt</a></li>
+                        <li><a href="#">Polo Shirt</a></li>
+                        <li><a href="#">Kemeja Flannel</a></li>
+                        <li><a href="#">Celana</a></li>
+                        <li><a href="#">Sepatu</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Hubungi Kami</h3>
+                    <div class="contact-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Bekasi - Indonesia</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>0858-1111-3186</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <span>societystore77@gmail.com</span>
+                    </div>
+                </div>
+            <!-- Social Media -->
+        <div class="footer-section">
+          <h3>Social Media</h3>
+          <div class="social-links">
+            <a href="https://www.instagram.com/ootd.society" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@ootd.society" target="_blank"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+      </div>
+            <div class="footer-bottom">
+                <p>&copy; 2020 Society. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Cart functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartButton = document.getElementById('cart-button');
+            const cartModal = document.getElementById('cart-modal');
+            const cartClose = document.getElementById('cart-close');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            const checkoutButton = document.getElementById('checkout-button');
+            const cartCount = document.querySelector('.cart-count');
+            
+            // Options modal elements
+            const optionsModal = document.getElementById('options-modal');
+            const optionsClose = document.getElementById('options-close');
+            const optionsProductName = document.getElementById('options-product-name');
+            const colorButtons = document.getElementById('color-buttons');
+            const sizeButtons = document.getElementById('size-buttons');
+            const quantityInput = document.getElementById('quantity-input');
+            const quantityMinus = document.getElementById('quantity-minus');
+            const quantityPlus = document.getElementById('quantity-plus');
+            const addToCartFinal = document.getElementById('add-to-cart-final');
+            
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let currentProduct = null;
+            
+            // Update cart count
+            function updateCartCount() {
+                const count = cart.reduce((total, item) => total + item.quantity, 0);
+                cartCount.textContent = count;
+                cartCount.style.display = count > 0 ? 'flex' : 'none';
+            }
+            
+            // Update cart total
+            function updateCartTotal() {
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                cartTotalElement.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            }
+            
+            // Render cart items
+            function renderCartItems() {
+                cartItemsContainer.innerHTML = '';
+                
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = '<p>Keranjang belanja kosong</p>';
+                    return;
+                }
+                
+                cart.forEach(item => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                        <div class="cart-item-details">
+                            <h4 class="cart-item-title">${item.name}</h4>
+                            ${item.color ? `<div class="cart-item-variant">Warna: ${item.color}</div>` : ''}
+                            ${item.size ? `<div class="cart-item-variant">Ukuran: ${item.size}</div>` : ''}
+                            <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+                            <div>Qty: ${item.quantity}</div>
+                            <button class="cart-item-remove" data-id="${item.id}">Hapus</button>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(cartItem);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.cart-item-remove').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        cart = cart.filter(item => item.id !== id);
+                        saveCart();
+                        renderCartItems();
+                        updateCartTotal();
+                        updateCartCount();
+                    });
+                });
+            }
+            
+            // Save cart to localStorage
+            function saveCart() {
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+            
+            // Show options modal
+            function showOptionsModal(product) {
+                currentProduct = product;
+                optionsProductName.textContent = product.name;
+                
+                // Clear previous options
+                colorButtons.innerHTML = '';
+                sizeButtons.innerHTML = '';
+                
+                // Add color options if available
+                if (product.colors) {
+                    const colors = product.colors.split(',');
+                    colors.forEach((color, index) => {
+                        const button = document.createElement('button');
+                        button.className = 'option-btn';
+                        button.textContent = color.trim();
+                        button.dataset.value = color.trim();
+                        if (index === 0) button.classList.add('selected');
+                        button.addEventListener('click', function() {
+                            document.querySelectorAll('#color-buttons .option-btn').forEach(btn => {
+                                btn.classList.remove('selected');
+                            });
+                            this.classList.add('selected');
+                        });
+                        colorButtons.appendChild(button);
+                    });
+                } else {
+                    document.getElementById('color-options').style.display = 'none';
+                }
+                
+                // Add size options if available
+                if (product.sizes) {
+                    const sizes = product.sizes.split(',');
+                    sizes.forEach((size, index) => {
+                        const button = document.createElement('button');
+                        button.className = 'option-btn';
+                        button.textContent = size.trim();
+                        button.dataset.value = size.trim();
+                        if (index === 0) button.classList.add('selected');
+                        button.addEventListener('click', function() {
+                            document.querySelectorAll('#size-buttons .option-btn').forEach(btn => {
+                                btn.classList.remove('selected');
+                            });
+                            this.classList.add('selected');
+                        });
+                        sizeButtons.appendChild(button);
+                    });
+                } else {
+                    document.getElementById('size-options').style.display = 'none';
+                }
+                
+                // Reset quantity
+                quantityInput.value = 1;
+                
+                // Show modal
+                optionsModal.classList.add('active');
+            }
+            
+            // Add to cart with selected options
+            function addToCartWithOptions() {
+                if (!currentProduct) return;
+                
+                const selectedColor = document.querySelector('#color-buttons .option-btn.selected')?.dataset.value;
+                const selectedSize = document.querySelector('#size-buttons .option-btn.selected')?.dataset.value;
+                const quantity = parseInt(quantityInput.value);
+                
+                // Check if item already in cart with same options
+                const existingItemIndex = cart.findIndex(item => 
+                    item.id === currentProduct.id && 
+                    item.color === selectedColor && 
+                    item.size === selectedSize
+                );
+                
+                if (existingItemIndex !== -1) {
+                    // Update quantity if item already exists
+                    cart[existingItemIndex].quantity += quantity;
+                } else {
+                    // Add new item to cart
+                    cart.push({
+                        id: currentProduct.id,
+                        name: currentProduct.name,
+                        price: currentProduct.price,
+                        image: currentProduct.image,
+                        color: selectedColor,
+                        size: selectedSize,
+                        quantity: quantity
+                    });
+                }
+                
+                saveCart();
+                updateCartCount();
+                optionsModal.classList.remove('active');
+                
+                // Show notification
+                alert(`${currentProduct.name} telah ditambahkan ke keranjang`);
+            }
+            
+            // Checkout via WhatsApp
+            checkoutButton.addEventListener('click', function() {
+                if (cart.length === 0) {
+                    alert('Keranjang belanja kosong');
+                    return;
+                }
+                
+                let message = 'Halo Society, saya ingin memesan produk berikut:\n\n';
+                
+                cart.forEach(item => {
+                    message += `- ${item.name}`;
+                    if (item.color) message += ` (Warna: ${item.color})`;
+                    if (item.size) message += ` (Ukuran: ${item.size})`;
+                    message += ` (${item.quantity} x Rp ${item.price.toLocaleString('id-ID')})\n`;
+                });
+                
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                message += `\nTotal: Rp ${total.toLocaleString('id-ID')}\n\n`;
+                message += 'Terima kasih!';
+                
+                const encodedMessage = encodeURIComponent(message);
+                window.open(`https://wa.me/6285811113186?text=${encodedMessage}`, '_blank');
+            });
+            
+            // Toggle cart modal
+            cartButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                cartModal.classList.add('active');
+                renderCartItems();
+                updateCartTotal();
+            });
+            
+            cartClose.addEventListener('click', function() {
+                cartModal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === cartModal) {
+                    cartModal.classList.remove('active');
+                }
+                if (e.target === optionsModal) {
+                    optionsModal.classList.remove('active');
+                }
+            });
+            
+            // Options modal close button
+            optionsClose.addEventListener('click', function() {
+                optionsModal.classList.remove('active');
+            });
+            
+            // Quantity controls
+            quantityMinus.addEventListener('click', function() {
+                if (parseInt(quantityInput.value) > 1) {
+                    quantityInput.value = parseInt(quantityInput.value) - 1;
+                }
+            });
+            
+            quantityPlus.addEventListener('click', function() {
+                quantityInput.value = parseInt(quantityInput.value) + 1;
+            });
+            
+            // Add to cart final button
+            addToCartFinal.addEventListener('click', addToCartWithOptions);
+            
+            // Add to cart buttons
+            document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const name = this.getAttribute('data-name');
+                    const price = parseInt(this.getAttribute('data-price'));
+                    const image = this.getAttribute('data-image');
+                    const colors = this.getAttribute('data-colors');
+                    const sizes = this.getAttribute('data-sizes');
+                    
+                    const product = {
+                        id,
+                        name,
+                        price,
+                        image,
+                        colors,
+                        sizes
+                    };
+                    
+                    // Check if product has variants (colors/sizes)
+                    if (colors || sizes) {
+                        showOptionsModal(product);
+                    } else {
+                        // Add directly to cart if no variants
+                        const existingItem = cart.find(item => item.id === id);
+                        
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                        } else {
+                            cart.push({
+                                id,
+                                name,
+                                price,
+                                image,
+                                quantity: 1
+                            });
+                        }
+                        
+                        saveCart();
+                        updateCartCount();
+                        
+                        // Show notification
+                        alert(`${name} telah ditambahkan ke keranjang`);
+                    }
+                });
+            });
+            
+            // Initialize cart count
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>
